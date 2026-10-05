@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Javokhir Komiljonov — uchrashuv band qilish</title>
+<meta name="description" content="Javokhir Komiljonov bilan 30–60 daqiqalik uchrashuv: online (Google Meet) yoki oflayn. Bo‘sh vaqtlar kalendardan jonli olinadi.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Javokhir Komiljonov — uchrashuv band qilish">
+<meta property="og:description" content="30–60 daqiqa · Online (Google Meet) yoki oflayn · Tasdiq darhol">
+<meta property="og:image" content="https://javokhirkomiljanov.github.io/meet/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="w2w-icon.svg" type="image/svg+xml">
+<script>
+  // Apps Script /exec URL of the booking backend (apps-script/Code.gs). Empty → slots from working hours, confirmation via Telegram.
+  window.MEET_API = '';
+  // Start the availability request before fonts and CSS — it is the slowest thing on the page.
+  if (window.MEET_API) window.__slots = fetch(window.MEET_API + '?action=slots').then(r => r.json()).catch(() => null);
+</script>
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap">
+<style>
+  :root {
+    --ink: #131313; --body: #5c5d5f; --muted: #8a8a8a;
+    --mint: #07e7b7; --mint-d: #05a884; --mint-l: #74dfc8; --tint: #eefcf8; --tint2: #e3faf4;
+    --blue-tint: #e8f1ff; --card: #f6f7f8; --line: #e6e8ea; --white: #fff; --danger: #e5484d;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--white); color: var(--body); font: 15px/1.5 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; -webkit-tap-highlight-color: transparent; }
+  a { color: inherit; }
+  h1, h2 { font-family: Manrope, Inter, sans-serif; color: var(--ink); letter-spacing: -.025em; margin: 0; }
+  .hl { color: var(--mint-d); }
+  svg { display: block; }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 2px solid var(--mint-d); outline-offset: 2px; }
+
+  /* ---------- top bar ---------- */
+  .top { max-width: 1120px; margin: 0 auto; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
+  .brand img { width: 36px; height: 36px; flex: none; }
+  .brand b { display: block; font: 800 16px/1.15 Manrope, Inter, sans-serif; letter-spacing: -.01em; }
+  .brand small { display: block; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lang { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 3px; flex: none; }
+  .lang button { padding: 6px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .04em; }
+  .lang button[aria-pressed="true"] { background: var(--white); color: var(--ink); box-shadow: 0 1px 2px rgba(16,24,40,.08); }
+
+  /* ---------- layout ---------- */
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 4px 20px 32px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  @media (min-width: 960px) {
+    .wrap { grid-template-columns: 360px minmax(0, 1fr); gap: 56px; padding-top: 28px; }
+    .intro { position: sticky; top: 24px; align-self: start; }
+  }
+  .eyebrow { margin: 0 0 12px; font: 700 11px/1 Inter, sans-serif; letter-spacing: .18em; text-transform: uppercase; color: var(--mint-d); }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; line-height: 1.08; margin-bottom: 12px; }
+  .lead { margin: 0 0 18px; font-size: 16px; max-width: 46ch; }
+  .facts { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .facts li { display: flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 500; font-size: 14px; background: var(--card); border-radius: 999px; padding: 6px 12px 6px 6px; }
+  .facts i { width: 24px; height: 24px; border-radius: 50%; background: var(--tint2); color: var(--mint-d); display: grid; place-items: center; flex: none; }
+  @media (max-width: 560px) {
+    .top { padding: 12px 14px; }
+    .brand img { width: 32px; height: 32px; }
+    .brand b { font-size: 15px; white-space: nowrap; }
+    .eyebrow { margin-bottom: 8px; }
+    h1 { font-size: 29px; margin-bottom: 8px; }
+    .lead { font-size: 14.5px; margin-bottom: 12px; }
+    .facts { gap: 6px; }
+    .facts li { font-size: 12.5px; padding: 4px 10px 4px 4px; gap: 6px; }
+    .facts i { width: 20px; height: 20px; }
+    .facts i svg { width: 13px; height: 13px; }
+  }
+  @media (min-width: 960px) {
+    .facts { flex-direction: column; gap: 12px; }
+    .facts li { background: none; padding: 0; font-size: 15px; }
+    .facts i { width: 30px; height: 30px; border-radius: 10px; }
+  }
+  .pick { display: none; margin-top: 28px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; }
+  @media (min-width: 960px) { .pick.on { display: block; } }
+  .pick p { margin: 0 0 8px; font: 700 11px/1 Inter, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .pick div { color: var(--ink); font-weight: 600; line-height: 1.45; }
+
+  /* ---------- panel ---------- */
+  .panel { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 24px; box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 16px 40px -18px rgba(16,24,40,.14); min-width: 0; }
+  @media (max-width: 560px) { .panel { padding: 18px 16px; border-radius: 20px; } .wrap { padding-left: 14px; padding-right: 14px; } }
+  .block + .block { margin-top: 22px; }
+  .lbl { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font: 700 12px/1 Inter, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+  .lbl em { font: 800 13px/1 Manrope, sans-serif; font-style: normal; letter-spacing: 0; color: var(--mint-l); }
+  .lbl .aside { margin-left: auto; display: flex; align-items: center; gap: 6px; font: 500 12px/1.2 Inter, sans-serif; letter-spacing: 0; text-transform: none; color: var(--muted); }
+  .arrows { display: none; gap: 4px; }
+  @media (pointer: fine) { .arrows { display: flex; } }
+  .arrows button { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; color: var(--ink); }
+  .arrows button:hover { background: var(--card); }
+
+  .seg { display: grid; gap: 10px; }
+  .seg.two { grid-template-columns: 1fr 1fr; }
+  .seg.three { grid-template-columns: repeat(3, 1fr); }
+  .opt { border: 1.5px solid var(--line); border-radius: 14px; padding: 11px 14px; background: var(--white); display: flex; align-items: center; gap: 12px; text-align: left; min-height: 58px; transition: border-color .15s, background-color .15s; }
+  .opt:hover { border-color: var(--mint-l); }
+  .opt[aria-pressed="true"] { border-color: var(--mint-d); background: var(--tint); box-shadow: inset 0 0 0 1px var(--mint-d); }
+  .opt .ic { width: 34px; height: 34px; border-radius: 10px; background: var(--card); color: var(--ink); display: grid; place-items: center; flex: none; }
+  .opt[aria-pressed="true"] .ic { background: var(--white); color: var(--mint-d); }
+  .opt b { display: block; color: var(--ink); font-weight: 600; line-height: 1.25; }
+  .opt small { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.25; }
+  .seg.three .opt { justify-content: center; text-align: center; min-height: 50px; padding: 10px 6px; }
+  .seg.three .opt b { font-variant-numeric: tabular-nums; }
+  @media (max-width: 400px) { .opt .ic { display: none; } }
+
+  .days { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; padding: 2px 2px 6px; margin: 0 -2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .days::-webkit-scrollbar { display: none; }
+  .day { flex: 0 0 62px; scroll-snap-align: start; border: 1.5px solid var(--line); border-radius: 14px; padding: 9px 0 8px; background: var(--white); display: flex; flex-direction: column; align-items: center; gap: 1px; transition: border-color .15s; }
+  .day:hover:not(:disabled) { border-color: var(--mint-l); }
+  .day .wd { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .day b { font: 800 20px/1.15 Manrope, sans-serif; color: var(--ink); }
+  .day .mo { font-size: 11px; color: var(--muted); }
+  .day i { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); margin-top: 3px; }
+  .day:disabled { opacity: .4; cursor: default; }
+  .day:disabled i { background: var(--line); }
+  .day[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); }
+  .day[aria-pressed="true"] b, .day[aria-pressed="true"] .wd, .day[aria-pressed="true"] .mo { color: var(--white); }
+
+  .slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 8px; }
+  .slot { height: 46px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; transition: border-color .12s, background-color .12s; }
+  .slot:hover { border-color: var(--mint-d); background: var(--tint); }
+  .slot[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--white); }
+  .empty { grid-column: 1 / -1; padding: 18px; border-radius: 14px; background: var(--card); text-align: center; }
+  .empty a { color: var(--mint-d); font-weight: 600; }
+  .sk { border-color: transparent !important; background: linear-gradient(90deg, #f1f2f3 25%, #e7e9eb 37%, #f1f2f3 63%) !important; background-size: 400% 100% !important; animation: sk 1.3s ease infinite; pointer-events: none; }
+  .sk * { visibility: hidden; }
+  @keyframes sk { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+  /* ---------- form ---------- */
+  .back { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-weight: 600; font-size: 14px; padding: 4px 0; }
+  .back:hover { color: var(--ink); }
+  .chosen { margin: 12px 0 22px; padding: 14px 16px; border-radius: 16px; background: var(--tint); border: 1px solid #c8f2e5; color: var(--ink); }
+  .chosen b { display: block; font: 800 18px/1.25 Manrope, sans-serif; letter-spacing: -.01em; }
+  .chosen span { display: block; margin-top: 2px; font-size: 14px; color: var(--body); }
+  .grid2 { display: grid; grid-template-columns: 1fr; column-gap: 12px; }
+  @media (min-width: 640px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+  .field { display: grid; gap: 6px; margin-bottom: 14px; }
+  .field label { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .field label small { font-weight: 400; color: var(--muted); }
+  .field input, .field textarea { width: 100%; height: 50px; padding: 0 14px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); font: inherit; font-size: 16px; outline: none; transition: border-color .15s, box-shadow .15s; -webkit-appearance: none; appearance: none; }
+  .field textarea { height: auto; min-height: 88px; padding: 12px 14px; resize: vertical; }
+  .field input:focus, .field textarea:focus { border-color: var(--mint-d); box-shadow: 0 0 0 4px var(--tint2); }
+  .field input[aria-invalid="true"] { border-color: var(--danger); box-shadow: 0 0 0 4px #fde8e8; }
+  .field .hint { font-size: 12.5px; color: var(--muted); }
+  .hp { position: absolute !important; left: -10000px; width: 1px; height: 1px; opacity: 0; }
+  .cta { width: 100%; height: 56px; margin-top: 4px; border-radius: 14px; background: var(--ink); color: var(--white); display: flex; align-items: center; justify-content: center; gap: 12px; font: 700 16px/1 Inter, sans-serif; text-decoration: none; transition: background-color .15s, transform .08s; }
+  .cta:hover { background: #000; }
+  .cta:active { transform: scale(.99); }
+  .cta[disabled] { cursor: progress; opacity: .8; }
+  .cta .dot { width: 28px; height: 28px; border-radius: 50%; background: var(--mint); color: var(--ink); display: grid; place-items: center; flex: none; }
+  .spin { width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid rgba(255,255,255,.35); border-top-color: var(--white); animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .note { margin: 12px 0 0; font-size: 13px; color: var(--muted); text-align: center; }
+
+  /* ---------- done ---------- */
+  .hero { border-radius: 20px; padding: 26px 22px 24px; margin-bottom: 16px; background: linear-gradient(135deg, var(--tint2) 0%, var(--blue-tint) 100%); }
+  .check { width: 52px; height: 52px; border-radius: 50%; background: var(--mint); color: var(--ink); display: grid; place-items: center; margin-bottom: 14px; }
+  .hero h2 { font-size: clamp(26px, 4vw, 32px); font-weight: 800; line-height: 1.12; margin-bottom: 8px; }
+  .hero p { margin: 0; color: var(--ink); }
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 10px 18px; margin: 0 0 16px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 16px; }
+  .kv dt { color: var(--muted); font-size: 13px; padding-top: 1px; }
+  .kv dd { margin: 0; color: var(--ink); font-weight: 600; word-break: break-word; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .btn2 { height: 48px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 14px; text-decoration: none; text-align: center; padding: 0 8px; }
+  .btn2:hover { border-color: var(--mint-l); background: var(--tint); }
+  .links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 22px; margin-top: 18px; font-size: 14px; }
+  .links a, .links button { color: var(--mint-d); font-weight: 600; text-decoration: none; }
+
+  footer { max-width: 1120px; margin: 0 auto; padding: 0 20px 28px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--muted); }
+  footer a { color: var(--muted); }
+  .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); transform: translate(-50%, 140%); max-width: min(92vw, 460px); padding: 13px 18px; border-radius: 14px; background: var(--ink); color: var(--white); font-weight: 500; font-size: 14px; box-shadow: 0 12px 32px -8px rgba(0,0,0,.35); transition: transform .25s ease, opacity .25s ease, visibility .25s; z-index: 10; opacity: 0; visibility: hidden; }
+  .toast.on { transform: translate(-50%, 0); opacity: 1; visibility: visible; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="./">
+    <img src="w2w-icon.svg" alt="W2W" width="36" height="36">
+    <span><b>Javokhir Komiljonov</b><small>CEO, W2W · Win to Win</small></span>
+  </a>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="uz">UZ</button><button type="button" data-lang="ru">RU</button><button type="button" data-lang="en">EN</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <aside class="intro">
+    <p class="eyebrow" data-t="eyebrow"></p>
+    <h1 data-th="title"></h1>
+    <p class="lead" data-t="lead"></p>
+    <ul class="facts">
+      <li><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i><span data-t="f1"></span></li>
+      <li><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="m16 10.5 5-3v9l-5-3"/></svg></i><span data-t="f2"></span></li>
+      <li><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17l9-10"/></svg></i><span data-t="f3"></span></li>
+    </ul>
+    <div class="pick" id="pick"><p data-t="summary"></p><div id="pickText"></div></div>
+  </aside>
+
+  <section class="panel" id="panel" aria-live="polite">
+    <!-- step 1: choose -->
+    <div id="viewPick">
+      <div class="block">
+        <div class="lbl"><em>01</em><span data-t="s_format"></span></div>
+        <div class="seg two" id="modeSeg">
+          <button type="button" class="opt" data-mode="online">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="m16 10.5 5-3v9l-5-3"/></svg></span>
+            <span><b data-t="online"></b><small data-t="online_sub"></small></span>
+          </button>
+          <button type="button" class="opt" data-mode="offline">
+            <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
+            <span><b data-t="offline"></b><small data-t="offline_sub"></small></span>
+          </button>
+        </div>
+      </div>
+      <div class="block">
+        <div class="lbl"><em>02</em><span data-t="s_dur"></span></div>
+        <div class="seg three" id="durSeg"></div>
+      </div>
+      <div class="block">
+        <div class="lbl"><em>03</em><span data-t="s_day"></span>
+          <span class="aside"><span id="tz"></span>
+            <span class="arrows"><button type="button" id="prev" aria-label="‹"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button><button type="button" id="next" aria-label="›"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button></span>
+          </span>
+        </div>
+        <div class="days" id="days"></div>
+      </div>
+      <div class="block">
+        <div class="lbl"><em>04</em><span data-t="s_time"></span></div>
+        <div class="slots" id="slots"></div>
+      </div>
+    </div>
+
+    <!-- step 2: details -->
+    <form id="viewForm" novalidate hidden>
+      <button type="button" class="back" id="back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg><span data-t="change"></span></button>
+      <div class="chosen" id="chosen"></div>
+      <div class="lbl"><em>05</em><span data-t="s_details"></span></div>
+      <div class="grid2">
+        <div class="field"><label for="f-name" data-t="name"></label><input id="f-name" name="name" autocomplete="name" data-ph="name_ph" maxlength="80" required></div>
+        <div class="field"><label for="f-contact" data-t="contact"></label><input id="f-contact" name="contact" autocomplete="tel" inputmode="text" data-ph="contact_ph" maxlength="60" required></div>
+        <div class="field"><label for="f-email"><span data-t="email"></span> <small>· <span data-t="optional"></span></small></label><input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@company.com" maxlength="120"><span class="hint" data-t="email_hint"></span></div>
+        <div class="field"><label for="f-company"><span data-t="company"></span> <small>· <span data-t="optional"></span></small></label><input id="f-company" name="company" autocomplete="organization" maxlength="100"></div>
+      </div>
+      <div class="field"><label for="f-topic"><span data-t="topic"></span> <small>· <span data-t="optional"></span></small></label><textarea id="f-topic" name="topic" rows="3" data-ph="topic_ph" maxlength="600"></textarea></div>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="cta" id="submit" type="submit"></button>
+      <p class="note" id="formNote" hidden></p>
+    </form>
+
+    <!-- step 3: done -->
+    <div id="viewDone" hidden></div>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Javokhir Komiljonov · W2W</span>
+  <a id="footTg" href="https://t.me/Javokhir_komiljonov" target="_blank" rel="noopener">Telegram</a>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="assertive"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  const CONFIG = {
+    API: window.MEET_API,
+    OWNER: 'Javokhir Komiljonov',
+    TELEGRAM: 'Javokhir_komiljonov',
+    // Used until the backend answers (or when it is not configured). The backend's own settings win.
+    FALLBACK: {
+      offsetMin: 300, durations: [30, 45, 60], step: 30, bufferMin: 15, minNoticeMin: 180, horizonDays: 21, offlineLocation: '',
+      hours: { 1: [['10:00', '19:00']], 2: [['10:00', '19:00']], 3: [['10:00', '19:00']], 4: [['10:00', '19:00']], 5: [['10:00', '19:00']], 6: [['10:00', '15:00']] },
+    },
+  };
+
+  const T = {
+    uz: {
+      eyebrow: 'Uchrashuv band qilish', title: 'Qulay vaqtni <span class="hl">tanlang</span>',
+      lead: 'Loyiha, avtomatlashtirish yoki hamkorlik bo‘yicha suhbat. Bo‘sh vaqtlar kalendarimdan jonli olinadi.',
+      f1: '30–60 daqiqa', f2: 'Online (Google Meet) yoki oflayn', f3: 'Tasdiq darhol keladi',
+      s_format: 'Format', online: 'Online', online_sub: 'Google Meet', offline: 'Oflayn', offline_sub: 'Yuzma-yuz uchrashuv',
+      s_dur: 'Davomiylik', min: 'daq', s_day: 'Kun', s_time: 'Vaqt',
+      tz_home: 'Toshkent vaqti (UTC+5)', tz_local: 'Sizning vaqtingiz · {tz}',
+      no_slots: 'Bu kunda bo‘sh vaqt yo‘q — boshqa kunni tanlang.', no_days: 'Yaqin kunlarda bo‘sh vaqt qolmadi.',
+      summary: 'Tanlovingiz', change: 'Vaqtni o‘zgartirish', s_details: 'Ma’lumotlaringiz',
+      name: 'Ism', name_ph: 'Ism Familiya', contact: 'Telefon yoki Telegram', contact_ph: '+998 90 123 45 67 yoki @username',
+      email: 'Email', email_hint: 'Google Calendar taklifi va Meet havolasi shu yerga keladi',
+      company: 'Kompaniya', topic: 'Nimani muhokama qilamiz?', topic_ph: 'Qisqacha: loyiha, vazifa yoki savol', optional: 'ixtiyoriy',
+      submit: 'Band qilish', sending: 'Band qilinmoqda…', submit_tg: 'Telegram orqali tasdiqlash',
+      ok_title: 'Uchrashuv <span class="hl">band qilindi</span>', ok_text: 'Vaqt kalendarimga qo‘shildi.', ok_email: 'Taklif {email} manziliga yuborildi.',
+      k_when: 'Qachon', k_format: 'Format', k_where: 'Qayerda',
+      meet: 'Google Meet’ga kirish', add_g: 'Google Calendar', add_ics: '.ics fayl', write_tg: 'Telegram’da yozish', another: 'Yana band qilish',
+      tg_title: 'Deyarli <span class="hl">tayyor</span>', tg_text: 'Telegram ochildi — tayyor xabarni yuboring, men vaqtni tasdiqlayman.', tg_open: 'Telegram’ni ochish',
+      offline_loc: 'Manzil tasdiqlash bilan yuboriladi', ev_title: 'Javokhir Komiljonov bilan uchrashuv',
+      e_required: 'Ism va telefon/Telegram majburiy.', e_email: 'Email noto‘g‘ri ko‘rinadi.',
+      e_taken: 'Bu vaqt hozirgina band bo‘ldi — boshqasini tanlang.', e_many: 'Juda ko‘p urinish. Telegram orqali yozing.',
+      e_generic: 'Xatolik yuz berdi. Qayta urinib ko‘ring yoki Telegram orqali yozing.', e_offline: 'Kalendar bilan aloqa yo‘q — bron Telegram orqali tasdiqlanadi.',
+      tg_msg: 'Assalomu alaykum! Uchrashuv band qilmoqchiman:',
+      wd: ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'],
+      wdl: ['yakshanba', 'dushanba', 'seshanba', 'chorshanba', 'payshanba', 'juma', 'shanba'],
+      mo: ['yan', 'fev', 'mar', 'apr', 'may', 'iyun', 'iyul', 'avg', 'sen', 'okt', 'noy', 'dek'],
+      mol: ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'],
+      date: (p, L) => `${p.d}-${L.mol[p.m]}, ${L.wdl[p.wd]}`,
+    },
+    ru: {
+      eyebrow: 'Запись на встречу', title: 'Выберите <span class="hl">удобное время</span>',
+      lead: 'Обсудим проект, автоматизацию или партнёрство. Свободные окна берутся из моего календаря в реальном времени.',
+      f1: '30–60 минут', f2: 'Онлайн (Google Meet) или офлайн', f3: 'Подтверждение сразу',
+      s_format: 'Формат', online: 'Онлайн', online_sub: 'Google Meet', offline: 'Офлайн', offline_sub: 'Личная встреча',
+      s_dur: 'Длительность', min: 'мин', s_day: 'День', s_time: 'Время',
+      tz_home: 'Время Ташкента (UTC+5)', tz_local: 'Ваше время · {tz}',
+      no_slots: 'В этот день свободных окон нет — выберите другой.', no_days: 'Ближайшие дни заняты.',
+      summary: 'Вы выбрали', change: 'Изменить время', s_details: 'Ваши данные',
+      name: 'Имя', name_ph: 'Имя Фамилия', contact: 'Телефон или Telegram', contact_ph: '+998 90 123 45 67 или @username',
+      email: 'Email', email_hint: 'Сюда придёт приглашение Google Calendar и ссылка на Meet',
+      company: 'Компания', topic: 'Что обсудим?', topic_ph: 'Коротко: проект, задача или вопрос', optional: 'необязательно',
+      submit: 'Записаться', sending: 'Записываю…', submit_tg: 'Подтвердить через Telegram',
+      ok_title: 'Встреча <span class="hl">забронирована</span>', ok_text: 'Время добавлено в мой календарь.', ok_email: 'Приглашение отправлено на {email}.',
+      k_when: 'Когда', k_format: 'Формат', k_where: 'Где',
+      meet: 'Войти в Google Meet', add_g: 'Google Calendar', add_ics: 'Файл .ics', write_tg: 'Написать в Telegram', another: 'Записаться ещё',
+      tg_title: 'Почти <span class="hl">готово</span>', tg_text: 'Открылся Telegram — отправьте готовое сообщение, и я подтвержу время.', tg_open: 'Открыть Telegram',
+      offline_loc: 'Адрес пришлю с подтверждением', ev_title: 'Встреча с Javokhir Komiljonov',
+      e_required: 'Имя и телефон/Telegram обязательны.', e_email: 'Проверьте email.',
+      e_taken: 'Это время только что заняли — выберите другое.', e_many: 'Слишком много попыток. Напишите в Telegram.',
+      e_generic: 'Что-то пошло не так. Попробуйте ещё раз или напишите в Telegram.', e_offline: 'Нет связи с календарём — запись подтвердим в Telegram.',
+      tg_msg: 'Здравствуйте! Хочу записаться на встречу:',
+      wd: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+      wdl: ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
+      mo: ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'],
+      mol: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
+      date: (p, L) => `${p.d} ${L.mol[p.m]}, ${L.wdl[p.wd]}`,
+    },
+    en: {
+      eyebrow: 'Book a meeting', title: 'Pick a time that <span class="hl">works for you</span>',
+      lead: 'Let’s talk about your project, automation or a partnership. Open slots come live from my calendar.',
+      f1: '30–60 minutes', f2: 'Online (Google Meet) or in person', f3: 'Instant confirmation',
+      s_format: 'Format', online: 'Online', online_sub: 'Google Meet', offline: 'In person', offline_sub: 'Face-to-face',
+      s_dur: 'Duration', min: 'min', s_day: 'Day', s_time: 'Time',
+      tz_home: 'Tashkent time (UTC+5)', tz_local: 'Your time · {tz}',
+      no_slots: 'No open slots this day — pick another one.', no_days: 'No open slots in the coming days.',
+      summary: 'Your pick', change: 'Change time', s_details: 'Your details',
+      name: 'Name', name_ph: 'Full name', contact: 'Phone or Telegram', contact_ph: '+998 90 123 45 67 or @username',
+      email: 'Email', email_hint: 'The Google Calendar invite and Meet link go here',
+      company: 'Company', topic: 'What should we discuss?', topic_ph: 'Briefly: project, task or question', optional: 'optional',
+      submit: 'Book it', sending: 'Booking…', submit_tg: 'Confirm via Telegram',
+      ok_title: 'You’re <span class="hl">booked</span>', ok_text: 'The meeting is on my calendar.', ok_email: 'An invite was sent to {email}.',
+      k_when: 'When', k_format: 'Format', k_where: 'Where',
+      meet: 'Join Google Meet', add_g: 'Google Calendar', add_ics: '.ics file', write_tg: 'Message on Telegram', another: 'Book another',
+      tg_title: 'Almost <span class="hl">done</span>', tg_text: 'Telegram is open — send the prepared message and I’ll confirm the time.', tg_open: 'Open Telegram',
+      offline_loc: 'Address follows with the confirmation', ev_title: 'Meeting with Javokhir Komiljonov',
+      e_required: 'Name and phone/Telegram are required.', e_email: 'That email looks off.',
+      e_taken: 'Someone just took that slot — please pick another.', e_many: 'Too many attempts. Message me on Telegram.',
+      e_generic: 'Something went wrong. Try again or message me on Telegram.', e_offline: 'Calendar is unreachable — we’ll confirm on Telegram.',
+      tg_msg: 'Hi! I’d like to book a meeting:',
+      wd: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      wdl: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      mo: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      mol: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      date: (p, L) => `${L.wdl[p.wd]}, ${p.d} ${L.mol[p.m]}`,
+    },
+  };
+
+  const MIN = 60e3, DAY = 864e5;
+  const CACHE_KEY = 'meet:slots:v1', CACHE_TTL = 10 * MIN;
+  const $ = s => document.querySelector(s);
+  const qs = new URLSearchParams(location.search);
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (_) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) { /* private mode */ } },
+  };
+
+  // Uzbek by default; ?lang=ru|en for links sent to Russian/English speakers; a manual switch is remembered.
+  let lang = [qs.get('lang'), store.get('meet:lang')].find(l => T[l]) || 'uz';
+  const t = (k, vars) => {
+    let s = T[lang][k];
+    if (vars) for (const v in vars) s = s.replace('{' + v + '}', vars[v]);
+    return s;
+  };
+
+  const S = {
+    mode: qs.get('m') === 'offline' ? 'offline' : 'online',
+    dur: Number(qs.get('d')) || 30,
+    day: null, slot: null,
+    settings: CONFIG.FALLBACK, busy: [],
+    live: false, loaded: false, failed: false,
+    view: 'pick', done: null, sending: false,
+  };
+
+  // ---------------------------------------------------------------- time helpers (displayed in the visitor's zone)
+  const pad = n => String(n).padStart(2, '0');
+  const parts = ms => { const d = new Date(ms); return { y: d.getFullYear(), m: d.getMonth(), d: d.getDate(), wd: d.getDay() }; };
+  const dayKey = ms => { const p = parts(ms); return p.y + '-' + p.m + '-' + p.d; };
+  const hhmm = ms => { const d = new Date(ms); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+  const longDate = ms => T[lang].date(parts(ms), T[lang]);
+  const hm = s => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
+  const isHomeZone = () => -new Date().getTimezoneOffset() === S.settings.offsetMin;
+  const zoneLabel = () => isHomeZone() ? t('tz_home')
+    : t('tz_local', { tz: (Intl.DateTimeFormat().resolvedOptions().timeZone || '').replace(/_/g, ' ') });
+
+  /** Working-hour grid (Tashkent) minus busy ± buffer, grouped by the visitor's calendar day. */
+  function buildDays() {
+    const st = S.settings, off = st.offsetMin * MIN, now = Date.now();
+    const dur = S.dur * MIN, buf = st.bufferMin * MIN, step = st.step * MIN;
+    const earliest = now + st.minNoticeMin * MIN, latest = now + st.horizonDays * DAY;
+    const t0 = Math.floor((now + off) / DAY) * DAY - off;
+    const days = new Map();
+    for (let i = 0; i <= st.horizonDays; i++) {
+      const d0 = t0 + i * DAY, wd = new Date(d0 + off).getUTCDay();
+      for (const [a, b] of (st.hours[wd] || [])) {
+        const end = d0 + hm(b) * MIN;
+        for (let s = d0 + hm(a) * MIN; s + dur <= end; s += step) {
+          if (s < earliest || s > latest) continue;
+          const k = dayKey(s);
+          if (!days.has(k)) days.set(k, { ms: s, slots: [] });
+          const e = s + dur;
+          if (!S.busy.some(x => x[0] < e + buf && x[1] > s - buf)) days.get(k).slots.push(s);
+        }
+      }
+    }
+    return days;
+  }
+
+  // ---------------------------------------------------------------- rendering
+  function renderStatic() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
+    document.querySelectorAll('[data-th]').forEach(el => { el.innerHTML = t(el.dataset.th); });
+    document.querySelectorAll('[data-ph]').forEach(el => { el.placeholder = t(el.dataset.ph); });
+    document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    $('#footTg').href = 'https://t.me/' + CONFIG.TELEGRAM;
+  }
+
+  function renderPick() {
+    document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode)));
+    $('#durSeg').innerHTML = S.settings.durations.map(d =>
+      `<button type="button" class="opt" data-dur="${d}" aria-pressed="${d === S.dur}"><b>${d} ${t('min')}</b></button>`).join('');
+    $('#tz').textContent = zoneLabel();
+
+    if (!S.loaded) {
+      $('#days').innerHTML = '<button class="day sk" type="button"><span class="wd">.</span><b>0</b><span class="mo">.</span><i></i></button>'.repeat(7);
+      $('#slots').innerHTML = '<button class="slot sk" type="button">00:00</button>'.repeat(8);
+      return;
+    }
+
+    const days = buildDays();
+    const keys = [...days.keys()];
+    if (!keys.length) {
+      $('#days').innerHTML = '';
+      $('#slots').innerHTML = `<div class="empty">${t('no_days')} <a href="https://t.me/${CONFIG.TELEGRAM}" target="_blank" rel="noopener">${t('write_tg')}</a></div>`;
+      return;
+    }
+    if (!days.has(S.day) || !days.get(S.day).slots.length) S.day = keys.find(k => days.get(k).slots.length) || keys[0];
+
+    $('#days').innerHTML = keys.map(k => {
+      const d = days.get(k), p = parts(d.ms), L = T[lang];
+      return `<button type="button" class="day" data-k="${k}" aria-pressed="${k === S.day}" ${d.slots.length ? '' : 'disabled'}
+        aria-label="${longDate(d.ms)}"><span class="wd">${L.wd[p.wd]}</span><b>${p.d}</b><span class="mo">${L.mo[p.m]}</span><i></i></button>`;
+    }).join('');
+    // keep the selected day visible inside the strip without scrolling the page itself
+    const box = $('#days'), sel = box.querySelector('[aria-pressed="true"]');
+    if (sel) {
+      const dx = sel.getBoundingClientRect().left - box.getBoundingClientRect().left;
+      if (dx < 0 || dx + sel.offsetWidth > box.clientWidth) box.scrollLeft += dx - 8;
+    }
+
+    const slots = days.get(S.day).slots;
+    if (!slots.includes(S.slot)) S.slot = null;
+    $('#slots').innerHTML = slots.length
+      ? slots.map(s => `<button type="button" class="slot" data-s="${s}" aria-pressed="${s === S.slot}">${hhmm(s)}</button>`).join('')
+      : `<div class="empty">${t('no_slots')}</div>`;
+  }
+
+  const modeLabel = () => S.mode === 'online' ? t('online') + ' · Google Meet' : t('offline');
+  const pickLine = () => S.slot == null ? '' :
+    `${longDate(S.slot)}<br>${hhmm(S.slot)}–${hhmm(S.slot + S.dur * MIN)} · ${S.dur} ${t('min')}<br>${modeLabel()}`;
+
+  function renderSummary() {
+    const on = S.slot != null && S.view === 'form';
+    $('#pick').classList.toggle('on', on);
+    $('#pickText').innerHTML = pickLine();
+    if (S.slot != null) {
+      $('#chosen').innerHTML = `<b>${hhmm(S.slot)}–${hhmm(S.slot + S.dur * MIN)} · ${longDate(S.slot)}</b>
+        <span>${S.dur} ${t('min')} · ${modeLabel()} · ${zoneLabel()}</span>`;
+    }
+  }
+
+  function renderForm() {
+    const viaTg = !S.live;
+    const btn = $('#submit');
+    btn.disabled = S.sending;
+    btn.innerHTML = S.sending
+      ? `<span class="spin"></span>${t('sending')}`
+      : `${viaTg ? t('submit_tg') : t('submit')}<span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>`;
+    const note = $('#formNote');
+    note.hidden = !(CONFIG.API && S.failed);
+    note.textContent = t('e_offline');
+  }
+
+  function renderDone() {
+    const r = S.done;
+    if (!r) return;
+    const tgUrl = 'https://t.me/' + CONFIG.TELEGRAM;
+    if (r.tg) {
+      $('#viewDone').innerHTML = `
+        <div class="hero"><div class="check">${ICON_TG}</div><h2>${t('tg_title')}</h2><p>${t('tg_text')}</p></div>
+        <a class="cta" href="${r.tgUrl}" target="_blank" rel="noopener">${t('tg_open')}</a>
+        <div class="links"><button type="button" data-again>${t('another')}</button></div>`;
+      return;
+    }
+    const where = r.mode === 'online' ? (r.meet ? `<a href="${r.meet}" target="_blank" rel="noopener">${r.meet.replace('https://', '')}</a>` : 'Google Meet')
+      : (r.location ? esc(r.location) : t('offline_loc'));
+    $('#viewDone').innerHTML = `
+      <div class="hero"><div class="check">${ICON_OK}</div><h2>${t('ok_title')}</h2>
+        <p>${t('ok_text')}${r.email ? ' ' + t('ok_email', { email: esc(r.email) }) : ''}</p></div>
+      <dl class="kv">
+        <dt>${t('k_when')}</dt><dd>${longDate(r.start)}, ${hhmm(r.start)}–${hhmm(r.end)}<br><span style="font-weight:400;color:var(--muted)">${zoneLabel()}</span></dd>
+        <dt>${t('k_format')}</dt><dd>${r.mode === 'online' ? t('online') : t('offline')} · ${r.duration} ${t('min')}</dd>
+        <dt>${t('k_where')}</dt><dd>${where}</dd>
+      </dl>
+      ${r.meet ? `<a class="cta" href="${r.meet}" target="_blank" rel="noopener">${t('meet')}<span class="dot">${ICON_ARROW}</span></a>` : ''}
+      <div class="row">
+        <a class="btn2" href="${gcalUrl(r)}" target="_blank" rel="noopener">${ICON_CAL}${t('add_g')}</a>
+        <button type="button" class="btn2" data-ics>${ICON_DL}${t('add_ics')}</button>
+      </div>
+      <div class="links"><a href="${tgUrl}" target="_blank" rel="noopener">${t('write_tg')}</a><button type="button" data-again>${t('another')}</button></div>`;
+  }
+
+  function render() {
+    renderStatic();
+    $('#viewPick').hidden = S.view !== 'pick';
+    $('#viewForm').hidden = S.view !== 'form';
+    $('#viewDone').hidden = S.view !== 'done';
+    renderPick(); renderSummary(); renderForm(); renderDone();
+  }
+
+  function go(view) {
+    S.view = view;
+    render();
+    const panel = $('#panel');
+    if (panel.getBoundingClientRect().top < 0) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (view === 'form' && matchMedia('(pointer: fine)').matches) $('#f-name').focus({ preventScroll: true });
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const el = $('#toast');
+    el.textContent = msg;
+    el.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('on'), 4500);
+  }
+
+  // ---------------------------------------------------------------- data
+  function apply(r) {
+    S.settings = Object.assign({}, CONFIG.FALLBACK, r.settings);
+    S.busy = r.busy || [];
+    S.live = true; S.failed = false;
+    if (!S.settings.durations.includes(S.dur)) S.dur = S.settings.durations[0];
+  }
+
+  function request(url, opt, ms) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, Object.assign({ signal: ctrl.signal, redirect: 'follow' }, opt))
+      .then(r => r.json()).finally(() => clearTimeout(timer));
+  }
+
+  async function load(fresh) {
+    if (!CONFIG.API) { S.loaded = true; renderPick(); return; }
+    try {
+      const pre = !fresh && window.__slots; window.__slots = null;
+      const r = (pre && await pre) || await request(CONFIG.API + '?action=slots' + (fresh ? '&fresh=1' : ''), {}, 20000);
+      if (!r || !r.ok) throw new Error('bad response');
+      apply(r);
+      store.set(CACHE_KEY, { at: Date.now(), r });
+    } catch (_) {
+      if (!S.live) S.failed = true;
+    }
+    S.loaded = true;
+    if (S.view === 'pick') renderPick();
+    renderForm();
+  }
+
+  // ---------------------------------------------------------------- booking
+  function telegramText(d) {
+    return [
+      t('tg_msg'),
+      `📅 ${longDate(S.slot)}, ${hhmm(S.slot)}–${hhmm(S.slot + S.dur * MIN)} · ${zoneLabel()}`,
+      `⏱ ${S.dur} ${t('min')} · ${modeLabel()}`,
+      `👤 ${d.name}${d.company ? ' (' + d.company + ')' : ''}`,
+      `📞 ${d.contact}`,
+      d.email ? `✉️ ${d.email}` : '',
+      d.topic ? `💬 ${d.topic}` : '',
+    ].filter(Boolean).join('\n');
+  }
+
+  $('#viewForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (S.sending || S.slot == null) return;
+    const f = new FormData(e.target);
+    const v = k => String(f.get(k) || '').trim();
+    const d = { name: v('name'), contact: v('contact'), email: v('email'), company: v('company'), topic: v('topic'), website: v('website') };
+
+    $('#f-name').setAttribute('aria-invalid', String(!d.name));
+    $('#f-contact').setAttribute('aria-invalid', String(!d.contact));
+    const badEmail = d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email);
+    $('#f-email').setAttribute('aria-invalid', String(!!badEmail));
+    if (!d.name || !d.contact) { toast(t('e_required')); (d.name ? $('#f-contact') : $('#f-name')).focus(); return; }
+    if (badEmail) { toast(t('e_email')); $('#f-email').focus(); return; }
+    store.set('meet:me', { name: d.name, contact: d.contact, email: d.email, company: d.company });
+
+    if (!S.live) {
+      const tgUrl = 'https://t.me/' + CONFIG.TELEGRAM + '?text=' + encodeURIComponent(telegramText(d));
+      if (!window.open(tgUrl, '_blank')) location.href = tgUrl;
+      S.done = { tg: true, tgUrl };
+      go('done');
+      return;
+    }
+
+    S.sending = true; renderForm();
+    try {
+      const r = await request(CONFIG.API, {
+        method: 'POST', // text/plain body → no CORS preflight against Apps Script
+        body: JSON.stringify(Object.assign({ action: 'book', mode: S.mode, duration: S.dur, start: S.slot }, d)),
+      }, 45000);
+      if (r && r.ok) {
+        S.done = Object.assign({ email: d.email, name: d.name }, r);
+        localStorage.removeItem(CACHE_KEY);
+        go('done');
+        load(true);
+      } else if (r && r.error === 'slot_taken') {
+        toast(t('e_taken'));
+        S.slot = null;
+        S.view = 'pick';
+        await load(true);
+        go('pick');
+      } else {
+        toast(t(r && r.error === 'too_many' ? 'e_many' : 'e_generic'));
+      }
+    } catch (_) {
+      toast(t('e_generic'));
+    } finally {
+      S.sending = false; renderForm();
+    }
+  });
+
+  // ---------------------------------------------------------------- calendar exports for the client
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const utc = ms => new Date(ms).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const evDetails = r => [r.meet ? 'Google Meet: ' + r.meet : '', 'Telegram: https://t.me/' + CONFIG.TELEGRAM].filter(Boolean).join('\n');
+  const evWhere = r => r.mode === 'online' ? (r.meet || 'Google Meet') : (r.location || '');
+
+  function gcalUrl(r) {
+    return 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
+      action: 'TEMPLATE', text: t('ev_title'), dates: utc(r.start) + '/' + utc(r.end), details: evDetails(r), location: evWhere(r),
+    });
+  }
+
+  function downloadIcs(r) {
+    const x = s => String(s).replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1');
+    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//W2W//meet//EN', 'METHOD:PUBLISH', 'BEGIN:VEVENT',
+      'UID:' + (r.id || Date.now()) + '@javokhirkomiljanov.github.io', 'DTSTAMP:' + utc(Date.now()),
+      'DTSTART:' + utc(r.start), 'DTEND:' + utc(r.end), 'SUMMARY:' + x(t('ev_title')),
+      'DESCRIPTION:' + x(evDetails(r)), 'LOCATION:' + x(evWhere(r)), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
+    a.download = 'meeting-javokhir.ics';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+
+  const svg = (d, w = 18) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const ICON_OK = svg('<path d="M5 12.5 10 17l9-10"/>', 24);
+  const ICON_TG = svg('<path d="m21 4-18 7.5 6 2L20 6l-8.5 9.5V20l3.2-3.6L19 20Z"/>', 24);
+  const ICON_ARROW = svg('<path d="M5 12h14M13 6l6 6-6 6"/>', 14);
+  const ICON_CAL = svg('<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>', 16);
+  const ICON_DL = svg('<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>', 16);
+
+  // ---------------------------------------------------------------- events
+  document.addEventListener('click', e => {
+    const el = e.target.closest('button, a');
+    if (!el) return;
+    if (el.dataset.lang) { lang = el.dataset.lang; store.set('meet:lang', lang); render(); return; }
+    if (el.dataset.mode) { S.mode = el.dataset.mode; renderPick(); return; }
+    if (el.dataset.dur) { S.dur = Number(el.dataset.dur); renderPick(); return; }
+    if (el.dataset.k) { S.day = el.dataset.k; S.slot = null; renderPick(); return; }
+    if (el.dataset.s) { S.slot = Number(el.dataset.s); go('form'); return; }
+    if (el.id === 'back') { go('pick'); return; }
+    if (el.id === 'prev' || el.id === 'next') { $('#days').scrollBy({ left: (el.id === 'next' ? 1 : -1) * 280, behavior: 'smooth' }); return; }
+    if (el.hasAttribute('data-ics')) { downloadIcs(S.done); return; }
+    if (el.hasAttribute('data-again')) { S.done = null; S.slot = null; go('pick'); }
+  });
+
+  // ---------------------------------------------------------------- boot
+  const me = store.get('meet:me');
+  if (me) for (const k of ['name', 'contact', 'email', 'company']) if (me[k]) $('#f-' + k).value = me[k];
+
+  const cached = CONFIG.API && store.get(CACHE_KEY);
+  if (cached && cached.r && Date.now() - cached.at < CACHE_TTL) { apply(cached.r); S.loaded = true; }
+  render();
+  load(false);
+})();
+</script>
+</body>
+</html>
