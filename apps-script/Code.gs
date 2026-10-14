@@ -6,6 +6,8 @@
  *                                    returns { ok, id, start, end, mode, meet, location }
  *
  * Deploy: Deploy → New deployment → Web app → Execute as: Me, Who has access: Anyone.
+ * Required: Services → + → Google Calendar API (v3). It enables the Calendar API for the script's project;
+ * without it every REST call below returns 403 and all slots look free.
  * Front-end: index.html on GitHub Pages (CONFIG.API = the /exec URL of this deployment).
  *
  * Optional Telegram ping on every booking: Project Settings → Script properties →
@@ -128,7 +130,10 @@ function busy_(from, to) {
   const list = [];
   UrlFetchApp.fetchAll(requests).forEach((res, i) => {
     if (res.getResponseCode() !== 200) {
-      console.warn('skip calendar ' + CFG.BUSY_CALENDARS[i] + ': HTTP ' + res.getResponseCode());
+      const msg = 'calendar ' + CFG.BUSY_CALENDARS[i] + ': HTTP ' + res.getResponseCode();
+      // The bookings calendar must be readable, otherwise every slot would look free.
+      if (CFG.BUSY_CALENDARS[i] === CFG.CALENDAR_ID) throw new Error('cannot read ' + msg);
+      console.warn('skip ' + msg);
       return;
     }
     (JSON.parse(res.getContentText()).items || []).forEach(ev => {

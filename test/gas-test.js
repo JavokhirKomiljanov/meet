@@ -30,6 +30,12 @@ ok('second calendar is merged in; unreadable calendar is skipped', () => {
   assert.equal(b.ok, true);
   assert.notDeepEqual(a.busy, b.busy);
 });
+ok('unreadable bookings calendar → no fake free slots, no booking', () => {
+  const h = load({ deny: ['primary'] });
+  assert.equal(h.get({ fresh: '1' }).ok, false);
+  assert.equal(h.post({ action: 'book', name: 'A', contact: '@a', mode: 'online', duration: 30, start: at(11, 0) }).ok, false);
+  assert.equal(h.inserted.length, 0);
+});
 ok('cache: second GET served from cache, fresh=1 bypasses', () => {
   const h = load(); h.get({}); assert.ok(h.cache.has('slots'));
   h.cache.set('slots', JSON.stringify({ ok: true, marker: 1 })); assert.equal(h.get({}).marker, 1); assert.equal(h.get({ fresh: '1' }).marker, undefined);
@@ -90,7 +96,7 @@ ok('rate limit: 3rd booking from same contact -> too_many', () => {
   const h = load();
   assert.equal(h.post({ ...base, start: at(11, 0) }).ok, true);
   assert.equal(h.post({ ...base, start: at(16, 0) }).ok, true);
-  assert.equal(h.post({ ...base, start: at(16, 0, d + 1) }).error, 'too_many');
+  assert.equal(h.post({ ...base, start: at(11, 0, d + 1) }).error, 'too_many'); // 11:00 is inside Saturday hours too
 });
 ok('booking invalidates cached slots', () => {
   const h = load(); h.get({}); assert.ok(h.cache.has('slots')); h.post({ ...base, start: at(11, 0) }); assert.ok(!h.cache.has('slots'));

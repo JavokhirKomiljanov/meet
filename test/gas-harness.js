@@ -19,7 +19,7 @@ function makeCalendars() {
   }
   cal.primary.push(ev(at(0, 19, 0), at(0, 20, 0), 'Meeting Otabek aka'));
   cal.primary.push({ ...ev(at(1, 11, 0), at(1, 12, 0), 'Declined invite'), attendees: [{ self: true, responseStatus: 'declined' }] });
-  cal['javokhir.k@alliancevs.io'].push(ev(at(0, 13, 45), at(0, 15, 0), "Go'zal opa massaj center"));
+  cal['javokhir.k@alliancevs.io'].push(ev(at(3, 13, 45), at(3, 15, 0), "Go'zal opa massaj center")); // future day: busy_ only reads from now on
   return cal;
   function ev(s, e, summary, transparency) {
     return { id: Math.random().toString(36).slice(2), status: 'confirmed', summary, transparency,

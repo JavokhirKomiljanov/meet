@@ -16,7 +16,7 @@
 <link rel="icon" href="w2w-icon.svg" type="image/svg+xml">
 <script>
   // Apps Script /exec URL of the booking backend (apps-script/Code.gs). Empty → slots from working hours, confirmation via Telegram.
-  window.MEET_API = '';
+  window.MEET_API = 'https://script.google.com/macros/s/AKfycbzzDn6Y4VfXZb8bMyN_LtInGjd399kJi9-cLHRGjOSqHegOjAlSsrmgto-l6bq8l6rn1w/exec';
   // Start the availability request before fonts and CSS — it is the slowest thing on the page.
   if (window.MEET_API) window.__slots = fetch(window.MEET_API + '?action=slots').then(r => r.json()).catch(() => null);
 </script>

@@ -1,6 +1,7 @@
 # meet — запись на встречу к Javokhir
 
 **Live:** https://javokhirkomiljanov.github.io/meet/
+**Бэкенд:** Apps Script «meet booking» в javohirdiamond06@gmail.com, деплой «meet booking v1» (URL в `index.html` → `window.MEET_API`).
 
 Страница в стиле W2W (белый/мятный, Manrope), где клиент сам бронирует 30 / 45 / 60 минут — онлайн (Google Meet) или офлайн.
 Свободные окна берутся из Google Calendar в реальном времени, бронь сразу создаёт событие в календаре.
@@ -24,6 +25,7 @@ og.png                  превью ссылки в Telegram
 
 1. Открыть https://script.new под **javohirdiamond06@gmail.com** (бронь ляжет в основной календарь этого аккаунта).
 2. Удалить всё в `Code.gs`, вставить `apps-script/Code.gs`. Сохранить (Ctrl+S), назвать проект `meet`.
+   Слева **Services → + → Google Calendar API (v3) → Add**. Без этого Google отвечает 403 на чтение календаря и все слоты кажутся свободными.
 3. Вверху выбрать функцию `selfTest` → **Run** → Review permissions → аккаунт → Advanced → *Go to meet (unsafe)* → **Allow**.
    В логе появятся занятые интервалы — значит календарь читается.
 4. **Deploy → New deployment** → ⚙ **Web app** → Execute as: **Me**, Who has access: **Anyone** → Deploy → скопировать URL `…/exec`.
